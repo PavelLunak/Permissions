@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Permissions</string>
+    <string name="permission_ok">PERMISSIONS OK</string>
+    <string name="no_permissions">NO PERMISSIONS</string>
+    <string name="permission_already_granted">Oprávnění je již uděleno!</string>
+    <string name="camera">KAMERA</string>
+    <string name="camera_2">Kamera</string>
+    <string name="permission_explanation">První žádost o udělení oprávnění byla zamítnuta, proto právě zobrazuji podrobnější vysvětlení, proč aplikace toto oprávnění požaduje... Zobrazit žádost systému o udělení oprávnění?</string>
+    <string name="yes">Ano</string>
+    <string name="no">Ne</string>
+    <string name="additional_permission">Dodatečné udělení oprávnění</string>
+    <string name="permissions_settings_info">Žádost o udělení oprávnění byla již dvakrát zamítnuta a bylo zaškrtnuto políčko \"Příště se neptat\". Oprávnění lze nyní udělit pouze ručně v nastavení aplikace, v sekci \"Oprávnění\". Otevřít nastavení?</string>
+    <string name="basic">Základní obsluha</string>
+    <string name="multiple">Požadavek na udělení dvou oprávnění v jednom kroku</string>
+    <string name="maximum_service">Maximální obsluha</string>
+    <string name="phone_calls_and_device_location">Telefonní hovory a poloha zařízení</string>
+</resources>
