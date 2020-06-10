@@ -68,8 +68,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return sp.getBoolean("definitive_rejection", false);
     }
 
+    // Aktualizace textů a barev labelů informujících o stavu jednotlivých oprávnění
     public void updateAppByPermissionStatus() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            // Kamera (fotoaparát)
             if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 labelPermission1.setText(R.string.permission_ok);
                 labelPermission1.setTextColor(Color.GREEN);
@@ -79,12 +82,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 labelPermission1.setTextColor(Color.RED);
             }
 
+            // Vytáčení tel. hovorů
             if (checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                 labelCall.setTextColor(Color.GREEN);
             } else {
                 labelCall.setTextColor(Color.RED);
             }
 
+            // Přesná poloha zařízení
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 labelLocation.setTextColor(Color.GREEN);
             } else {
@@ -93,12 +98,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // Základní způsob ověření přítomnosti oprávnění k použití fotoaparátu (kamery) zařízení
     public void checkCameraPermissionGrantedMinimal() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, R.string.permission_already_granted, Toast.LENGTH_SHORT).show();
             } else {
+                // Žádost o zobrazení systémového dialogu s žádostí o udělení oprávnění
                 ActivityCompat.requestPermissions(
                         MainActivity.this,
                         new String[]{Manifest.permission.CAMERA},
@@ -107,27 +114,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // Rozšířený způsob ověření přítomnosti oprávnění k použití fotoaparátu (kamery) zařízení
     public void checkCameraPermissionGrantedMaximal() {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
 
+        // Bylo již udělení oprávnění definitivně odepřeno?
         if (isDefinitiveRejection()) {
             showDialogSettings();
             return;
         }
 
         if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            //Oprávnění uděleno již dříve
+            // Udělení oprávnění uděleno již dříve
             Toast.makeText(this, R.string.permission_already_granted, Toast.LENGTH_SHORT).show();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-            //Oprávnění posledně odmítnuto (nezaškrtnuto políčko "Příště se neptat")
+            // Udělení oprávnění již bylo odmítnuto (nezaškrtnuto políčko "Příště se neptat")
             showDialogExplanation();
         } else {
-            //
-            showDialogInfo(Manifest.permission.CAMERA, "Bude požadováno oprávnění přístupu ke kameře zařízení");
+            // Zobrazení informačního doalogu před zobrazením systémové žádosti
+            showDialogInfo(Manifest.permission.CAMERA, "Pro použití fotoaparátu bude nutné této aplikaci udělit oprávnění. Pokračovat k udělení oprávnění?");
         }
     }
 
+    // Základní způsob žádosti o udělení oprávnění k vytáčení tel. hovorů a k přesné poloze zařízení
     public boolean checkCallAndLocationPermissionGranted() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -157,23 +167,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
-    private void showPermissionsSettings() {
-        Intent intent = new Intent();
-        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", getPackageName(), null);
-        intent.setData(uri);
-        startActivityForResult(intent, SETTINGS_SHOWED);
-    }
-
     public void showDialogInfo(final String permission, String message) {
 
-        if (isDefinitiveRejection()) {
-            showDialogSettings();
-            return;
-        }
-
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-        alertDialogBuilder.setTitle("Žádost o oprávnění");
+        alertDialogBuilder.setTitle(R.string.request_permission);
 
         alertDialogBuilder
                 .setMessage(message)
@@ -202,6 +199,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alertDialog.show();
     }
 
+    // Zobrazení dialogového okna s vysvětlením důvodu potřeby udělení oprávnění před zobrazením
+    // systémového dialogového okna s žádostí a s možností zaškrtnutí políčka "Příště se neptat".
     public void showDialogExplanation() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
         alertDialogBuilder.setTitle(R.string.camera);
@@ -237,7 +236,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setCancelable(false)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        showPermissionsSettings();
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getPackageName(), null);
+                        intent.setData(uri);
+                        startActivityForResult(intent, SETTINGS_SHOWED);
                     }
                 })
                 .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
